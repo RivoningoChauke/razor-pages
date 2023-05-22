@@ -1,54 +1,26 @@
-﻿@page
-@model RazorPagesMovies.Pages.Movies.IndexModel
+﻿using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore;
+using RazorPagesMovie.Models;
 
-@{
-    ViewData["Title"] = "Index";
-}
+namespace RazorPagesMovie.Pages.Movies;
 
-<h1>Index</h1>
+public class IndexModel : PageModel
+{
+    private readonly RazorPagesMovie.Data.RazorPagesMovieContext _context;
 
-<p>
-    <a asp-page="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Movie[0].Title)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Movie[0].ReleaseDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Movie[0].Genre)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Movie[0].Price)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model.Movie) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Title)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ReleaseDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Genre)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Price)
-            </td>
-            <td>
-                <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-page="./Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+    public IndexModel(RazorPagesMovie.Data.RazorPagesMovieContext context)
+    {
+        _context = context;
+    }
+
+    public IList<Movie>
+    Movie { get;set; }  = default!;
+
+    public async Task OnGetAsync()
+    {
+    if (_context.Movie != null)
+    {
+    Movie = await _context.Movie.ToListAsync();
+    }
+    }
+    }
